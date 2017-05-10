@@ -2,7 +2,7 @@
 int Creer = 0;
 String ApiKey = "keym9YkyCquXXXXkG";
 
-/*
+
 void runCurl() {
   // Launch 'curl' command and get Arduino ascii art logo from the network
   // curl is command line program for transferring data using different internet protocols
@@ -23,7 +23,7 @@ void runCurl() {
   //Serial.flush();
   //delay(5000);
 }
-*/
+
 
 
 void CreateEvent(String NomEvnt)
@@ -62,7 +62,7 @@ void setup() {
   while (!Serial);
 
   // run various example processes
-  //runCurl();
+  runCurl();
   CreateEvent("Test1");
 }
 
