@@ -1,15 +1,17 @@
 #include <Process.h>
 int Creer = 0;
-String ApiKey = "keym9YkyCquXXXkG";
+String ApiKey = "keym9YkyCquwN8EkG";
 
 /*
 void runCurl() {
+  // Launch 'curl' command and get Arduino ascii art logo from the network
+  // curl is command line program for transferring data using different internet protocols
   Process p;        // Create a process and call it 'p'
   //p.runShellCommand("curl  https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Capteur%20Luminosit%C3%A9/recJhRtzJ2CEh6i2n -H 'Authorization: Bearer '" + ApiKey);
   p.begin("curl");
   p.addParameter("-i");
   p.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Pot");
-  p.addParameter("-H 'Authorization: Bearer keym9YkyCquXXXkG'");
+  p.addParameter("-H 'Authorization: Bearer keym9YkyCquwN8EkG'");
   //p.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Capteur%20Luminosit%C3%A9/recJhRtzJ2CEh6i2n?api_key="+ApiKey);
   p.run();
   // A process output can be read with the stream methods
@@ -30,9 +32,10 @@ void CreateEvent(String NomEvnt)
   Serial.println("'CreateEvent' démarré");
   Process q;
   q.begin("curl");
-  q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement?api_key="+ApiKey);
+  //q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement?api_key="+ApiKey);
   q.addParameter("-v");
-  //q.addParameter("-H 'Authorization: Bearer '" + ApiKey);
+  q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement");
+  q.addParameter("-H 'Authorization: Bearer '" + ApiKey);
   q.addParameter("-XPOST");
   q.addParameter("-H");
   q.addParameter("'Content-type: application/json'");
@@ -66,4 +69,3 @@ void setup() {
 void loop() {
   // Do nothing here.
 }
-
