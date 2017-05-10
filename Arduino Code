@@ -1,0 +1,69 @@
+#include <Process.h>
+int Creer = 0;
+String ApiKey = "keym9YkyCquXXXkG";
+
+/*
+void runCurl() {
+  Process p;        // Create a process and call it 'p'
+  //p.runShellCommand("curl  https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Capteur%20Luminosit%C3%A9/recJhRtzJ2CEh6i2n -H 'Authorization: Bearer '" + ApiKey);
+  p.begin("curl");
+  p.addParameter("-i");
+  p.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Pot");
+  p.addParameter("-H 'Authorization: Bearer keym9YkyCquXXXkG'");
+  //p.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Capteur%20Luminosit%C3%A9/recJhRtzJ2CEh6i2n?api_key="+ApiKey);
+  p.run();
+  // A process output can be read with the stream methods
+  while (p.available() > 0) {
+    char c = p.read();
+    Serial.print(c);
+  }
+  // Ensure the last bit of data is sent.
+  //Serial.flush();
+  //delay(5000);
+}
+*/
+
+
+void CreateEvent(String NomEvnt)
+{
+  Serial.println("-----");
+  Serial.println("'CreateEvent' démarré");
+  Process q;
+  q.begin("curl");
+  q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement?api_key="+ApiKey);
+  q.addParameter("-v");
+  //q.addParameter("-H 'Authorization: Bearer '" + ApiKey);
+  q.addParameter("-XPOST");
+  q.addParameter("-H");
+  q.addParameter("'Content-type: application/json'");
+  q.addParameter("-d '{");
+  q.addParameter("'fields': {'Name': 'Test1','Type événement': 'Mesure - Trop sec','Mesure - humidité': 140,'Pot': ['recJiYcOz0lS8vOsN'],'Sonde - Mesure': ['rectLngEvcaZA9CR3'],'Date / Heure': '2017 - 05 - 08T10: 19: 00.000Z'}}'");
+  q.run();
+  while (q.available() > 0) {
+    char d = q.read();
+    Serial.print(d);
+  }
+  //Ensure the last bit of data is sent.
+  //Serial.flush();
+  //delay(5000);
+}
+
+void setup() {
+  // Initialize Bridge
+  Bridge.begin();
+
+  // Initialize Serial
+  Serial.begin(9600);
+
+  // Wait until a Serial Monitor is connected.
+  while (!Serial);
+
+  // run various example processes
+  //runCurl();
+  CreateEvent("Test1");
+}
+
+void loop() {
+  // Do nothing here.
+}
+
