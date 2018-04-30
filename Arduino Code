@@ -1,15 +1,9 @@
 #include <ArduinoJson.h>
 #include <Process.h>
 int Creer = 0;
-String ApiKey = "XXX";
+String ApiKey = "keyHDkXbinJsBsRCA";
 
 String JsonEvenement = "";
-
-//Construction du json Evenement
-const size_t bufferSize = 2 * JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(6);
-DynamicJsonBuffer jsonBuffer(bufferSize);
-JsonObject& root = jsonBuffer.createObject();
-
 
 
 void GetEvent(String IdEvent) {
@@ -128,3 +122,4 @@ void setup() {
 void loop() {
   // Do nothing here.
 }
+
