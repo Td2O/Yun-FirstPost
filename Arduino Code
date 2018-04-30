@@ -1,54 +1,111 @@
+#include <ArduinoJson.h>
 #include <Process.h>
 int Creer = 0;
-String ApiKey = "keym9YkyCquXXXXkG";
+String ApiKey = "XXX";
+
+String JsonEvenement = "";
+
+//Construction du json Evenement
+const size_t bufferSize = 2 * JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(6);
+DynamicJsonBuffer jsonBuffer(bufferSize);
+JsonObject& root = jsonBuffer.createObject();
 
 
-void runCurl() {
+
+void GetEvent(String IdEvent) {
   // Launch 'curl' command and get Arduino ascii art logo from the network
   // curl is command line program for transferring data using different internet protocols
-  Process p;        // Create a process and call it 'p'
-  //p.runShellCommand("curl  https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Capteur%20Luminosit%C3%A9/recJhRtzJ2CEh6i2n -H 'Authorization: Bearer '" + ApiKey);
-  p.begin("curl");
-  p.addParameter("-i");
-  p.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Pot");
-  p.addParameter("-H 'Authorization: Bearer keym9YkyCquXXXXkG'");
-  //p.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Capteur%20Luminosit%C3%A9/recJhRtzJ2CEh6i2n?api_key="+ApiKey);
-  p.run();
+  Serial.println("-----");
+  Serial.println("'GetEvent' démarré");
+  Process r;        // Create a process and call it 'r'
+  r.begin("curl");
+  r.addParameter("-v");
+  //r.addParameter("-I");
+  r.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement/" + IdEvent + "?api_key=" + ApiKey);
+  r.run();
   // A process output can be read with the stream methods
-  while (p.available() > 0) {
-    char c = p.read();
+  while (r.available() > 0) {
+    char c = r.read();
     Serial.print(c);
   }
-  // Ensure the last bit of data is sent.
-  //Serial.flush();
-  //delay(5000);
+  Serial.println("'LireEvent' - retour reçu");
+  //Ensure the last bit of data is sent.
+  Serial.flush();
+  delay(5000);
 }
 
-
-
-void CreateEvent(String NomEvnt)
+void CreateEvent(String NomEvnt, String TypeEvnt, int MesureHumidite)
 {
   Serial.println("-----");
   Serial.println("'CreateEvent' démarré");
   Process q;
   q.begin("curl");
-  //q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement?api_key="+ApiKey);
   q.addParameter("-v");
-  q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement");
-  q.addParameter("-H 'Authorization: Bearer '" + ApiKey);
   q.addParameter("-XPOST");
-  q.addParameter("-H");
-  q.addParameter("'Content-type: application/json'");
-  q.addParameter("-d '{");
-  q.addParameter("'fields': {'Name': 'Test1','Type événement': 'Mesure - Trop sec','Mesure - humidité': 140,'Pot': ['recJiYcOz0lS8vOsN'],'Sonde - Mesure': ['rectLngEvcaZA9CR3'],'Date / Heure': '2017 - 05 - 08T10: 19: 00.000Z'}}'");
+  q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement?api_key=" + ApiKey);
+  //q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement");
+  //q.addParameter("-H \"Authorization: Bearer " + ApiKey +"\"");
+  q.addParameter("-H \"Content-type: application/json\"");
+  q.addParameter("-d");
+  JsonEvenement = "'{\"fields\": {\"Name\": \"";
+  JsonEvenement += NomEvnt;
+  JsonEvenement += "\",\"Type événement\": \"";
+  JsonEvenement += TypeEvnt;
+  JsonEvenement += "\",\"Mesure - humidité\": ";
+  JsonEvenement += MesureHumidite;
+  JsonEvenement += ",\"Pot\": ";
+  JsonEvenement += "[\"recJiYcOz0lS8vOsN\"]";
+  JsonEvenement += ",\"Sonde - Mesure\": ";
+  JsonEvenement += "[\"rectLngEvcaZA9CR3\"]";
+  JsonEvenement += ",\"Date / Heure\": \"";
+  JsonEvenement += "2018-04-30T10:19:00.000Z";
+  JsonEvenement += "\"},";
+  JsonEvenement += "\"typecast\": true";
+  JsonEvenement += "}'";
+  q.addParameter(JsonEvenement);
+  Serial.println(JsonEvenement);
+  Serial.println();
   q.run();
+
   while (q.available() > 0) {
     char d = q.read();
     Serial.print(d);
   }
+
+  Serial.println("'CreateEvent' - retour reçu");
   //Ensure the last bit of data is sent.
-  //Serial.flush();
-  //delay(5000);
+  Serial.flush();
+  delay(5000);
+}
+
+void CreateEvent2()
+{
+  Serial.println("-----");
+  Serial.println("'CreateEvent' démarré");
+  Process q;
+  q.begin("curl");
+  q.addParameter("-v");
+  q.addParameter("-XPOST");
+  q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement?api_key=" + ApiKey);
+  //q.addParameter("https://api.airtable.com/v0/appfqkj7sz4JgkmZJ/Evenement");
+  //q.addParameter("-H \"Authorization: Bearer " + ApiKey +"\"");
+  q.addParameter("-H \"Content-type: application/json\"");
+  q.addParameter("-d");
+  JsonEvenement = "'{\"fields\":{\"Name\":\"Test3004\",\"Date / Heure\":\"2017-05-08T10:19:00.000Z\",\"Type événement\":\"Mesure - Trop Humide\",\"Pot\":[\"recJiYcOz0lS8vOsN\"],\"Sonde - Mesure\":[\"rectLngEvcaZA9CR3\"],\"Mesure - humidité\":998},\"createdTime\":\"2017-06-06T18:09:23.000Z\"}'";
+  q.addParameter(JsonEvenement);
+  Serial.println(JsonEvenement);
+  Serial.println();
+  q.run();
+
+  while (q.available() > 0) {
+    char d = q.read();
+    Serial.print(d);
+  }
+
+  Serial.println("\"CreateEvent2\" - retour reçu");
+  //Ensure the last bit of data is sent.
+  Serial.flush();
+  delay(5000);
 }
 
 void setup() {
@@ -62,8 +119,10 @@ void setup() {
   while (!Serial);
 
   // run various example processes
-  runCurl();
-  CreateEvent("Test1");
+  //runCurl();
+  CreateEvent("Test646464", "Mesure - Trop sec", 140);
+  GetEvent("recJZJ2TUM5huXBVq");
+  CreateEvent2();
 }
 
 void loop() {
